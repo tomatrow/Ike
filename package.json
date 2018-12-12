@@ -1,0 +1,22 @@
+{
+    "name": "ike",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "example": "examples"
+    },
+    "scripts": {
+        "build": "rollup --config",
+        "dev": "browser-sync start --browser 'Safari' --server examples --files 'examples/index.html, build/Ike.js'",
+        "start": "npm run build; and npm run dev"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "three": "^0.99.0"
+    },
+    "devDependencies": {
+        "rollup": "^0.67.4"
+    }
+}
