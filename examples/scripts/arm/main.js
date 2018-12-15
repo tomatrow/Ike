@@ -38,6 +38,13 @@ function initMeshes() {
     app.scene.add(mesh);
 }
 
+function initModels() {
+    const onLoad = gltf => app.scene.add(gltf.scene)
+    const onProgress = xhr => console.log(`${xhr.loaded/xhr.total*100} % loaded`)
+    const onError = error => console.error(error)
+    app.loader.load('assets/RiggedSimple.glb', onLoad, onProgress, onError);
+}
+
 function init() {
 
     app.init();
@@ -49,6 +56,7 @@ function init() {
 
     initLights();
     initMeshes();
+    initModels();
 
     app.start();
 
