@@ -8,7 +8,7 @@
     },
     "scripts": {
         "build": "rollup --config",
-        "dev": "browser-sync start --browser 'Safari' --server examples --files 'examples/index.html, build/Ike.js'",
+        "dev": "browser-sync start --browser 'Safari' --server .",
         "start": "npm run build; and npm run dev"
     },
     "author": "",
