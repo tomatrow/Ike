@@ -38,11 +38,66 @@ function initMeshes() {
     app.scene.add(mesh);
 }
 
-function initModels() {
-    const onLoad = gltf => app.scene.add(gltf.scene)
+
+async function initModels() {
+    const riggedSimple = await load('assets/RiggedSimple.glb')
+    // app.scene.add(riggedSimple)
+
+    const object = riggedSimple.children[0]
+    const objectHelper = new THREE.SkeletonHelper(object)
+    objectHelper.material.lineWidth = 5
+    app.scene.add(objectHelper)
+
+    const skinnedCylinder = riggedSimple.children[1]
+    const cylinderHelper = new THREE.SkeletonHelper(skinnedCylinder)
+    cylinderHelper.material.lineWidth = 3
+    app.scene.add(cylinderHelper)
+
+    app.scene.add(skinnedCylinder)
+    app.scene.add(object)
+
+    // Wiggle object on axis according to curve.
+    const wiggle = (object, axis, curve) => {
+        curve = curve ? curve : Math.sin
+        axis = axis ? axis : 'x'
+        const position = object.position
+        const originalPosition = position.clone()
+        let acc = 0
+        const upper = axis.charAt(0).toUpperCase()
+        const lower = upper.charAt(0).toLowerCase()
+        return delta => {
+            acc += delta
+            const modifier = curve(acc)
+            position['set' + upper](originalPosition[lower] + modifier)
+        }
+    }
+
+    skinnedCylinder.userData.onUpdate = (() => {
+        const bone = skinnedCylinder.skeleton.bones[1]
+        const xWiggle = wiggle(bone)
+        const yWiggle = wiggle(bone, 'y', Math.cos)
+
+        return delta => {
+            xWiggle(delta)
+            yWiggle(delta)
+        }
+    })()
+}
+
+function load(asset) {
     const onProgress = xhr => console.log(`${xhr.loaded/xhr.total*100} % loaded`)
-    const onError = error => console.error(error)
-    app.loader.load('assets/RiggedSimple.glb', onLoad, onProgress, onError);
+
+    return new Promise((resolve, reject) => {
+        const onLoad = gltf => resolve(gltf.scene.children[0])
+        const onError = error => reject(error)
+        app.loader.load(asset, onLoad, onProgress, onError);
+    })
+}
+
+
+function initHelpers() {
+    console.log('Looking for helpers.')
+    const children = app.scene.children
 }
 
 function init() {
