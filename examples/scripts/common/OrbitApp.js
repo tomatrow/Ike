@@ -26,8 +26,8 @@ class OrbitApp extends App {
             ambient: new THREE.AmbientLight(color, 1)
         }
 
-        const lights = ...Object.values(this.light)
-        this.scene.add(lights);
+        const lights = Object.values(this.light)
+        this.scene.add(...lights);
     }
 
     positionCamera() {
