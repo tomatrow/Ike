@@ -15,30 +15,6 @@ function initLights() {
     app.scene.add(frontLight, backLight);
 }
 
-function initMeshes() {
-    // create a geometry
-    const geometry = new THREE.BoxBufferGeometry(2, 2, 2);
-
-    // create a purple Standard material
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x800080
-    });
-
-    // create a Mesh containing the geometry and material
-    const mesh = new THREE.Mesh(geometry, material);
-
-    // increase the mesh's rotation each frame
-    mesh.userData.onUpdate = () => {
-        mesh.rotation.z += 0.01;
-        mesh.rotation.x += 0.01;
-        mesh.rotation.y += 0.01;
-    }
-
-    // add the mesh to the scene object
-    app.scene.add(mesh);
-}
-
-
 async function initModels() {
     const riggedSimple = await load('assets/RiggedSimple.glb')
 
@@ -108,7 +84,6 @@ function init() {
     app.camera.updateProjectionMatrix();
 
     initLights();
-    initMeshes();
     initModels();
 
     app.start();
