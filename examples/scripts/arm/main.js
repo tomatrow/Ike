@@ -41,7 +41,6 @@ function initMeshes() {
 
 async function initModels() {
     const riggedSimple = await load('assets/RiggedSimple.glb')
-    // app.scene.add(riggedSimple)
 
     const object = riggedSimple.children[0]
     const objectHelper = new THREE.SkeletonHelper(object)
@@ -53,8 +52,7 @@ async function initModels() {
     cylinderHelper.material.lineWidth = 3
     app.scene.add(cylinderHelper)
 
-    app.scene.add(skinnedCylinder)
-    app.scene.add(object)
+    app.scene.add(riggedSimple)
 
     // Wiggle object on axis according to curve.
     const wiggle = (object, axis, curve) => {
