@@ -2,7 +2,7 @@
 const app = new OrbitApp('container')
 window.app = app
 
-function initMeshes() {
+function createCube() {
     // create a geometry
     const geometry = new THREE.BoxBufferGeometry(2, 2, 2);
 
@@ -21,10 +21,13 @@ function initMeshes() {
         mesh.rotation.y += 0.01;
     }
 
-    // add the mesh to the scene object
-    app.scene.add(mesh);
+    return mesh
 }
 
+function initMeshes() {
+    const cube = createCube()
+    app.scene.add(cube)
+}
 
 function init() {
 
