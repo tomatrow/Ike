@@ -35,11 +35,11 @@ function init() {
 
     initMeshes();
 
+    app.container.addEventListener('click', () =>
+        app.running ? app.stop() : app.start()
+    )
     app.start();
 
-    app.container.addEventListener('click', () => {
-        app.running ? app.stop() : app.start();
-    });
 }
 
 // call the init function to set everything up
