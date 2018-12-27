@@ -25,10 +25,13 @@ function createCube() {
 }
 
 function initMeshes() {
+    // create the cube in shape and form
     const cube = createCube()
+    // add to scene
     app.scene.add(cube)
 }
 
+function initMeshes() {
 function init() {
 
     app.init()
