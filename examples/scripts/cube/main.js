@@ -31,7 +31,7 @@ function initMeshes() {
 
 function init() {
 
-    app.init();
+    app.init()
 
     initMeshes();
 
