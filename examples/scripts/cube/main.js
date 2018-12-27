@@ -3,35 +3,54 @@ const app = new OrbitApp('container')
 window.app = app
 
 function createCube() {
+    // make a new skeleton
+    const skeleton = new THREE.Skeleton([new THREE.Bone()])
+
     // create a geometry
-    const geometry = new THREE.BoxBufferGeometry(2, 2, 2);
+    const cubeGeometry = new THREE.BoxGeometry(2, 2, 2)
+
+    // rig it
+    const constantIndex = () => [0]
+    const constantWeight = () => 1
+    rig(cubeGeometry, skeleton.bones, constantIndex, constantWeight)
+    const cubeBufferGeometry = new THREE.BufferGeometry().fromGeometry(cubeGeometry)
 
     // create a purple Standard material
     const material = new THREE.MeshStandardMaterial({
-        color: 0x800080
+        color: 0x800080,
+        skinning: true
     });
 
     // create a Mesh containing the geometry and material
-    const mesh = new THREE.Mesh(geometry, material);
+    const cube = new THREE.SkinnedMesh(cubeBufferGeometry, material);
 
-    // increase the mesh's rotation each frame
-    mesh.userData.onUpdate = () => {
-        mesh.rotation.z += 0.01;
-        mesh.rotation.x += 0.01;
-        mesh.rotation.y += 0.01;
-    }
+    // apply rig
+    cube.add(skeleton.bones[0]) // add root
+    cube.bind(skeleton)
 
-    return mesh
+    return cube
 }
 
-function initMeshes() {
+function initCube() {
     // create the cube in shape and form
     const cube = createCube()
+
+    // rotate it on update
+    const root = cube.skeleton.bones[0]
+    root.userData.onUpdate = () => {
+        root.rotation.z += 0.01;
+        root.rotation.x += 0.01;
+        root.rotation.y += 0.01;
+    }
+
     // add to scene
     app.scene.add(cube)
 }
 
 function initMeshes() {
+    initCube()
+}
+
 function init() {
 
     app.init()
