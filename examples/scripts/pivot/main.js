@@ -4,7 +4,7 @@ window.app = app
 
 /* Concerning `initThing` vs `createThing`:
     create* is for the minimum amount of setup to add it to the object graph
-    init* is for everything else */
+    init* is for everything else, e.g. behavior.*/
 
 function createCube() {
     // make a new skeleton
@@ -64,6 +64,7 @@ function initPivot() {
 }
 
 function initGraph() {
+    // cube diameter is 2
     const cube = initCube()
     cube.position.setX(2)
     const pivot = initPivot()
