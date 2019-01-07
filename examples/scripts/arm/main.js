@@ -2,24 +2,42 @@
 const app = new OrbitApp('container')
 window.app = app
 
-function createCube(radius = 1) {
-    return new THREE.Mesh()
+class Arm extends THREE.SkinnedMesh {
+    constructor(segmentLength = 2, segmentCount = 2, createJointGeometry = () => new THREE.BoxBufferGeometry(1, 1, 1)) {
+
+        const geometry = Arm.createGeometry(createJointGeometry, segmentLength, segmentCount)
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xffff00
+        });
+        super(geometry, material)
+
+        // make the armature
+        // TODO: use geometry.groups to define the control each bone should have
+        const root = new THREE.Bone()
+        const skeleton = new THREE.Skeleton([root])
+
+        this.add(root)
+        this.bind(skeleton)
+    }
+
+    // creates a chain of size segmentCount+1
+    static createGeometry(createJointGeometry, segmentLength, segmentCount) {
+        const geometries = []
+        for (let i = 0; i <= segmentCount; i++) {
+            const jointGeometry = createJointGeometry()
+            const matrix = new THREE.Matrix4().makeTranslation(0, i * segmentLength, 0)
+            jointGeometry.applyMatrix(matrix)
+            geometries.push(jointGeometry)
+        }
+        const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries, true)
+        return geometry
+    }
+
 }
 
-/* Crates an Arm with `segmentCount+1` joints.
- * The start is the _base_ and the end is the _tip_.
- */
-function createArm(segmentLength = 2, segmentCount = 2) {
-    return new THREE.Object3D()
-}
-
-/* Creates an easily recognizable skinned arm.
- * Each joint has a bone. The object graph is: root -> [skeleton,cubes]
- * where |skeleton| == |cubes|.
- * createJoint is (radius: Int) -> Mesh
- */
-function initArm(createJoint = createCube) {
-    return new THREE.Object3D()
+function initArm() {
+    const arm = Arm()
+    return arm
 }
 
 function initGraph() {
