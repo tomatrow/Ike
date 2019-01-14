@@ -35,6 +35,52 @@ class Arm extends THREE.SkinnedMesh {
 
 }
 
+/* Generates a skinned mesh based on an object graph
+ * @param root The root node of the graph
+ * @param createNodeGeometry Makes a geometry based on an object in the graph.
+ *        Internally, this is always converted to a buffer geometry.
+ * @return A Skinnedmesh isomorphic to the graph so that each node has a
+ *         geometry provided by the factory function.
+ */
+function createAutoSkinnedMesh(
+    root = new THREE.Object3D(),
+    createNodeGeometry = object => new THREE.BoxBufferGeometry()
+) {
+    // TODO: Error checking for arguments
+    const geometries = []
+
+    const generateNodeGeometry = object => {
+        // TODO: check nodeGeometry for nilness, is a grwomtry, transform it
+        //       into a buffer geometry
+
+        // create a node at the objects location
+        const nodeGeometry = createNodeGeometry(object)
+        const matrix = new THREE.Matrix4().setPosition(object.position)
+        nodeGeometry.applyMatrix(matrix)
+
+        // save it
+        geometries.push(nodeGeometry)
+    }
+    const generateNodeBone = object => {
+        // TODO: Actually implement this
+    }
+    const work = object => {
+        generateNodeGeometry(object)
+        generateNodeBone(object)
+    }
+    root.traverse(work);
+
+    const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries, true)
+    const material = new THREE.MeshBasicMaterial({
+        color: 0xffff00
+    });
+    const mesh = new THREE.SkinnedMesh(geometry, material)
+
+    // TODO: Create a skeleton and apply it 
+
+    return mesh
+}
+
 function initArm() {
     const arm = new Arm()
     return arm
