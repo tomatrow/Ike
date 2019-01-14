@@ -36,7 +36,7 @@ class Arm extends THREE.SkinnedMesh {
 }
 
 function initArm() {
-    const arm = Arm()
+    const arm = new Arm()
     return arm
 }
 
