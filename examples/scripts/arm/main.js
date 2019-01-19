@@ -44,7 +44,7 @@ class Arm extends THREE.SkinnedMesh {
  */
 function createAutoSkinnedMesh(
     root = new THREE.Object3D(),
-    createNodeGeometry = object => new THREE.BoxBufferGeometry()
+    createNodeGeometry = object => new THREE.BoxBufferGeometry(1, 1, 1)
 ) {
     // TODO: Error checking for arguments
     const geometries = []
@@ -55,12 +55,14 @@ function createAutoSkinnedMesh(
 
         // create a node at the objects location
         const nodeGeometry = createNodeGeometry(object)
-        const matrix = new THREE.Matrix4().setPosition(object.position)
-        nodeGeometry.applyMatrix(matrix)
+
+        // We mirror positions in the real world
+        nodeGeometry.applyMatrix(object.matrixWorld)
 
         // save it
         geometries.push(nodeGeometry)
     }
+
     const generateNodeBone = object => {
         // TODO: Actually implement this
     }
@@ -70,13 +72,31 @@ function createAutoSkinnedMesh(
     }
     root.traverse(work);
 
+    // let's see hoe I can get vertex groups from mergeBufferGeometries
+    // So, each geometry in geometries is mapped to a _group_ where the index of
+    // of the geometry is preserved in a property called `materialIndex` on the
+    // group. E.g. `geometries`, `geometry.groups` are paraelle.
+
+    // So, maybe I should do the following:
+    // (1) flatten the object tree into `objects`
+    // (2) make a dict if "id of object" -> "index in objects"
+    // (3) create `geometry` from `objects` // now groups
+    // (4) given a `object` in `objects`
+    //     (a) create a bone at the same positon as object in world
+    //     (b) asssociate verticies from paraelle group in `geometry.groups`
+    //     (b) parent bone to boneOf(object.parent)
     const geometry = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries, true)
     const material = new THREE.MeshBasicMaterial({
         color: 0xffff00
     });
     const mesh = new THREE.SkinnedMesh(geometry, material)
 
-    // TODO: Create a skeleton and apply it 
+    // TODO: Create a skeleton and apply it
+    const bone = new THREE.Bone()
+    const skeleton = new THREE.Skeleton([bone])
+
+    mesh.add(root)
+    mesh.bind(skeleton)
 
     return mesh
 }
@@ -87,8 +107,26 @@ function initArm() {
 }
 
 function initGraph() {
-    const arm = initArm()
-    app.scene.add(arm)
+
+    // create segments
+    const root = new THREE.Object3D()
+    const elbow = new THREE.Object3D()
+    const hand = new THREE.Object3D()
+
+    // setup relationships
+    root.add(elbow)
+    elbow.add(hand)
+
+    // setup positioning via local transforms
+    root.position.setY(0)
+    elbow.position.setY(2)
+    hand.position.setY(2)
+
+    // apply the changes we made in the local matricies to the world ones
+    root.updateMatrixWorld()
+
+    // test this chain
+    app.scene.add(createAutoSkinnedMesh(root))
 }
 
 function init() {
