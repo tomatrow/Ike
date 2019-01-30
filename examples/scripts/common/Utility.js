@@ -154,3 +154,14 @@ function createAutoSkinnedMesh(
 
     return mesh
 }
+
+/* Loads the first object in a GLTF. */
+function load(asset) {
+    const onProgress = xhr => console.log(`${xhr.loaded/xhr.total*100} % loaded`)
+
+    return new Promise((resolve, reject) => {
+        const onLoad = gltf => resolve(gltf.scene.children[0])
+        const onError = error => reject(error)
+        app.loader.load(asset, onLoad, onProgress, onError);
+    })
+}
