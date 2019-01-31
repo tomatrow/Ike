@@ -13,8 +13,11 @@ async function initInsect() {
 async function initGraph() {
     // import the stick bug
     const insect = await initInsect()
+    const rootObject = new THREE.Object3D()
+    const geometryMap = () => insect.geometry
+    const skinnedMesh = createAutoSkinnedMesh(rootObject, geometryMap)
     // add to scene
-    app.scene.add(insect)
+    app.scene.add(skinnedMesh)
 }
 
 function init() {
