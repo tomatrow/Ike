@@ -8,7 +8,8 @@
     },
     "scripts": {
         "build": "rollup --config",
-        "dev": "browser-sync start --browser 'Safari' --server . --files 'examples/*.html, examples/scripts/**/*.js'",
+        "watch": "rollup --config --watch",
+        "dev": "browser-sync start --browser 'Safari' --server . --files 'examples/*.html, examples/scripts/**/*.js, build/Ike.js'",
         "start": "npm run build; and npm run dev"
     },
     "author": "",
