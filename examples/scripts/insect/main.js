@@ -2,7 +2,7 @@ const app = new OrbitApp('container')
 window.app = app
 
 async function initInsect() {
-    const path = 'assets/Stick Closed.gltf'
+    const path = 'assets/Stick Closed.glb' //'assets/Stick Closed.gltf'
     const importedObject = await load(path)
     // we are trying to import an armature initially,
     // the actual mesh is one of it's children
