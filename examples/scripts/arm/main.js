@@ -18,6 +18,7 @@ function initArm() {
     hand.position.setY(2)
 
     const arm = createAutoSkinnedMesh(root)
+    arm.name = "arm"
     return arm
 }
 
@@ -26,11 +27,17 @@ function initGraph() {
     app.scene.add(arm)
 }
 
+function initSystem() {
+    const arm = app.scene.getObjectByName("arm")
+    const system = new THREE.Ike.System(arm)
+}
+
 function init() {
 
     app.init();
 
     initGraph()
+    initSystem()
 
     app.container.addEventListener('click', () => {
         app.running ? app.stop() : app.start();
