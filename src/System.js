@@ -1,6 +1,7 @@
 class System {
-    constructor() {
-
+    constructor(skinnedMesh) {
+        if (!skinnedMesh || !skinnedMesh.isSkinnedMesh)
+            throw new Error("Invalid Argument: Not a skinned mesh");
     }
 }
 
