@@ -40,6 +40,8 @@ function createAutoSkinnedMesh(
         // TODO: validation, error checking, convert geometery into buffer
 
         const nodeGeometry = createNodeGeometry(object)
+        if (!nodeGeometry || !nodeGeometry.isBufferGeometry)
+            throw new Error("Non buffered geometry")
         nodeGeometry.applyMatrix(object.matrixWorld)
 
         return nodeGeometry
